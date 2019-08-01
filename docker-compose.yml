@@ -1,0 +1,93 @@
+version: "3"
+services:
+#   redis:
+#     image: zong209/action_detect:redis
+#     build: .
+#     privileged: true
+#     command: redis-server
+#     container_name: detect_redis
+#     restart: always
+#     ports:
+#       - "6379:6379"
+#   detect-server:
+#     image: zong209/action_detect:detect
+#     build: .
+#     privileged: true
+#     working_dir: /app
+#     environment: 
+#       - TZ=Asia/Shanghai
+#     volumes:
+#       - /home/ubuntu/gz/action_compose/detect_server/app/detect_server:/app/detect_server
+#       - /home/ubuntu/gz/action_compose/detect_server/app/models:/app/models
+#     container_name: detect_server
+#     restart: always
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "2000k"
+#         max-file: "40"
+#     depends_on:
+#       - redis
+#     links:
+#       - redis
+#     command: python /app/detect_server/detect_server.py
+#   detect-web-server:
+#     image: zong209/action_detect:detect
+#     build: .
+#     privileged: true
+#     working_dir: /app
+#     environment: 
+#       - TZ=Asia/Shanghai
+#     volumes:
+#       - /home/ubuntu/gz/action_compose/detect_server/app/detect_server:/app/detect_server
+#     container_name: detect_web
+#     restart: always
+#     ports:
+#       - "4000:5000"
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "2000k"
+#         max-file: "40"
+#     depends_on:
+#       - redis
+#     links:
+#       - redis
+#     command: python /app/detect_server/web_server.py
+#   detect-samples:
+#     # replace username/repo:tag with your name and image details
+#     image: zong209/action_detect:samples
+#     build: .
+#     privileged: true
+#     working_dir: /app
+#     container_name: detect_samples
+#     restart: always
+#     environment: 
+#       - TZ=Asia/Shanghai
+#     volumes:
+#       - /home/ubuntu/gz/action_compose/detect_samples/app:/app
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "2000k"
+#         max-file: "40"
+#     depends_on:
+#       - detect-server
+#       - detect-web-server
+# #       - ffmpeg
+#     links:
+#       - detect-server
+#       - detect-web-server
+# #       - ffmpeg
+#     command: python samples.py
+  ffmpeg:
+    # replace username/repo:tag with your name and image details
+    image: jrottenberg/ffmpeg:latest 
+    build: .
+    privileged: true
+    working_dir: /app
+    container_name: detect_ffmpeg
+    restart: always
+    volumes:
+      - /home/ubuntu/gz/action_compose/ffmpeg_server/test_data:/app/test_data
+    command: -re -stream_loop -1  -i /app/test_data/MVI_0408.mp4 -f flv rtmp://193.112.88.179/hls/test
